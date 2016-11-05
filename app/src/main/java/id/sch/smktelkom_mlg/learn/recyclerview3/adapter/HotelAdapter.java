@@ -1,5 +1,7 @@
 package id.sch.smktelkom_mlg.learn.recyclerview3.adapter;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,11 +21,12 @@ import id.sch.smktelkom_mlg.learn.recyclerview3.model.hotel;
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> {
 
     ArrayList<hotel> hotelList;
+    IHotelAdapter mIHotelAdapter;
 
-    public HotelAdapter(ArrayList<hotel> hotelList) {
+    public HotelAdapter(Context context, ArrayList<hotel> hotelList) {
         this.hotelList = hotelList;
+        mIHotelAdapter = (IHotelAdapter) context;
     }
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,7 +42,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         hotel Hotel = hotelList.get(position);
         holder.tvJudul.setText(Hotel.judul);
         holder.tvDeskripsi.setText(Hotel.deskripsi);
-        holder.ivFoto.setImageDrawable(Hotel.foto);
+        holder.ivFoto.setImageURI(Uri.parse(Hotel.foto));
     }
 
     @Override
@@ -48,6 +51,10 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         if (hotelList != null)
             return hotelList.size();
         return 0;
+    }
+
+    public interface IHotelAdapter {
+        void doClick(int pos);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -61,6 +68,16 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             ivFoto = (ImageView) itemView.findViewById(R.id.imageView);
             tvJudul = (TextView) itemView.findViewById(R.id.textViewJudul);
             tvDeskripsi = (TextView) itemView.findViewById(R.id.textViewDeskripsi);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mIHotelAdapter.doClick(getAdapterPosition());
+                }
+            });
+
         }
+
+
     }
 }
